@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arjun Aryan — Software Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" />
+  <style>
+    /* ─── Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg:      #ffffff;
+      --bg2:     #f0f8ff;
+      --surface: rgba(0,0,0,0.04);
+      --surface2:rgba(0,0,0,0.055);
+      --border:  rgba(0,0,0,0.10);
+      --cyan:    #0284c7;
+      --cyan10:  rgba(2,132,199,0.10);
+      --cyan20:  rgba(2,132,199,0.20);
+      --purple:  #6d28d9;
+      --purple10:rgba(109,40,217,0.10);
+      --purple20:rgba(109,40,217,0.20);
+      --green:   #059669;
+      --text:    #0f172a;
+      --text2:   #334155;
+      --text3:   #64748b;
+      --mono:    'JetBrains Mono', monospace;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter', sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* ─── Scroll progress bar ────────────────────────────── */
+    #progress {
+      position:fixed; top:0; left:0; z-index:9999;
+      height:2px; width:0%;
+      background:linear-gradient(90deg, var(--cyan), var(--purple), var(--cyan));
+      background-size:200%;
+      animation:progressShimmer 3s linear infinite;
+      pointer-events:none;
+      transition:width .08s linear;
+    }
+    @keyframes progressShimmer { 0%{background-position:0%} 100%{background-position:200%} }
+
+    /* ─── Floating tech icons ─────────────────────────────── */
+    .ficons { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .fi {
+      position:absolute;
+      left:var(--x); top:var(--y);
+      width:52px; height:52px;
+      background:rgba(0,0,0,0.04);
+      border:1px solid rgba(0,0,0,0.10);
+      border-radius:16px;
+      display:flex; align-items:center; justify-content:center;
+      backdrop-filter:blur(6px);
+      animation:iconFloat var(--dur,8s) ease-in-out infinite;
+      animation-delay:var(--d,0s);
+      box-shadow:0 4px 24px rgba(0,0,0,0.3);
+    }
+    .fi i {
+      font-size:26px;
+      filter:drop-shadow(0 0 6px rgba(2,132,199,0.25));
+    }
+    @keyframes iconFloat {
+      0%,100%{ transform:translateY(0px)   rotate(var(--r,0deg)) scale(1);    opacity:.7; }
+      50%{     transform:translateY(-18px) rotate(var(--r,0deg)) scale(1.05); opacity:1;  }
+    }
+
+    /* ─── 3D tilt (applied via JS) ───────────────────────── */
+    .exp-card, .sk-card, .edu-card, .lead-card {
+      transform-style:preserve-3d;
+      transform:perspective(1000px) rotateX(0) rotateY(0);
+    }
+
+    /* ─── Noise overlay ──────────────────────────────────── */
+    body::before {
+      content:'';
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity:0.018;
+    }
+
+
+    /* ─── Navbar ──────────────────────────────────────────── */
+    nav {
+      position:fixed; top:0; width:100%;
+      z-index:500;
+      padding:22px 64px;
+      display:flex; align-items:center; justify-content:space-between;
+      transition:background .4s, border-color .4s;
+      border-bottom:1px solid transparent;
+    }
+    nav.stuck {
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(24px);
+      border-color:var(--border);
+    }
+    .logo {
+      font-family:'Inter', sans-serif;
+      font-size:16px; font-weight:800;
+      color:var(--text); letter-spacing:-.3px;
+      text-decoration:none;
+    }
+    .logo span { color:var(--cyan); }
+    nav ul { list-style:none; display:flex; gap:38px; }
+    nav ul a {
+      color:var(--text2); text-decoration:none;
+      font-size:12px; font-weight:600;
+      letter-spacing:1.2px; text-transform:uppercase;
+      position:relative; transition:color .2s;
+    }
+    nav ul a::after {
+      content:'';
+      position:absolute; bottom:-4px; left:0;
+      width:0; height:1px;
+      background:var(--cyan);
+      transition:width .3s ease;
+    }
+    nav ul a:hover { color:var(--cyan); }
+    nav ul a:hover::after { width:100%; }
+
+    /* ─── Hero ────────────────────────────────────────────── */
+    .hero {
+      min-height:100vh;
+      position:relative; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+      padding:0 64px;
+    }
+    #canvas {
+      position:absolute; inset:0;
+      width:100%; height:100%; z-index:0;
+    }
+    .blob {
+      position:absolute; border-radius:50%;
+      filter:blur(120px); pointer-events:none;
+      animation:blobFloat 10s ease-in-out infinite;
+    }
+    .blob-a { width:700px;height:700px; background:rgba(2,132,199,.05); top:-150px;right:-100px; animation-delay:0s; }
+    .blob-b { width:600px;height:600px; background:rgba(109,40,217,.05); bottom:-150px;left:-100px; animation-delay:5s; }
+    @keyframes blobFloat {
+      0%,100%{ transform:translate(0,0) scale(1); }
+      40%{ transform:translate(40px,-40px) scale(1.06); }
+      70%{ transform:translate(-30px,25px) scale(.97); }
+    }
+    .hero-inner {
+      position:relative; z-index:1;
+      max-width:880px; text-align:center;
+    }
+    .hero-pill {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 18px;
+      background:var(--cyan10);
+      border:1px solid var(--cyan20);
+      border-radius:100px;
+      font-size:11px; font-weight:700;
+      color:var(--cyan); letter-spacing:1.8px; text-transform:uppercase;
+      margin-bottom:36px;
+      animation:fadeUp .8s ease .1s both;
+    }
+    .pulse-dot {
+      width:6px; height:6px;
+      background:var(--cyan); border-radius:50%;
+      animation:pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
+
+    .hero-name {
+      font-size:clamp(58px,9.5vw,102px);
+      font-weight:900; letter-spacing:-5px; line-height:1.05;
+      background:linear-gradient(160deg,#0f172a 30%,rgba(15,23,42,.6));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      padding-bottom:0.1em;
+      margin-bottom:28px;
+      animation:fadeUp .8s ease .2s both;
+    }
+    .hero-role {
+      font-size:19px; color:var(--text2); margin-bottom:40px;
+      font-weight:400; letter-spacing:.3px;
+      animation:fadeUp .8s ease .3s both;
+    }
+    .hero-role em { color:var(--cyan); font-style:normal; font-weight:600; }
+    .typewriter-cursor {
+      display:inline-block; width:2px; height:.9em;
+      background:var(--cyan); vertical-align:text-bottom;
+      margin-left:2px; animation:blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    .hero-bio {
+      font-size:16px; color:var(--text3); line-height:1.85;
+      max-width:580px; margin:0 auto 52px;
+      animation:fadeUp .8s ease .4s both;
+    }
+    .hero-bio strong { color:var(--text2); font-weight:600; }
+    .hero-btns {
+      display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+      animation:fadeUp .8s ease .5s both;
+    }
+    .btn-p {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 30px;
+      background:var(--cyan); color:#000;
+      font-weight:700; font-size:14px;
+      border-radius:10px; text-decoration:none;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .btn-p:hover { transform:translateY(-3px); box-shadow:0 10px 36px rgba(2,132,199,.4); }
+    .btn-s {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 30px;
+      background:var(--surface2); border:1px solid var(--border);
+      color:var(--text); font-weight:600; font-size:14px;
+      border-radius:10px; text-decoration:none;
+      transition:border-color .2s, transform .2s;
+    }
+    .btn-s:hover { border-color:rgba(0,0,0,.18); transform:translateY(-3px); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(36px);} to{opacity:1;transform:translateY(0);} }
+
+    /* ─── Stats Band ──────────────────────────────────────── */
+    .stats-band {
+      background:var(--bg2);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      padding:0;
+    }
+    .stats-wrap {
+      max-width:1200px; margin:0 auto;
+      display:grid; grid-template-columns:repeat(4,1fr);
+      background:var(--border); gap:1px;
+    }
+    .stat {
+      background:var(--bg2);
+      padding:52px 24px; text-align:center;
+      position:relative; overflow:hidden;
+      transition:background .3s;
+    }
+    .stat::after {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:3px;
+      background:linear-gradient(90deg,var(--cyan),var(--purple));
+      transform:scaleX(0); transform-origin:left;
+      transition:transform .4s ease;
+    }
+    .stat:hover { background:rgba(2,132,199,.025); }
+    .stat:hover::after { transform:scaleX(1); }
+    .stat-ico {
+      width:50px; height:50px;
+      background:var(--cyan10); border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      color:var(--cyan); margin:0 auto 18px;
+    }
+    .stat-ico svg { width:22px; height:22px; }
+    .stat-num {
+      font-size:44px; font-weight:900; letter-spacing:-2.5px;
+      color:var(--text); line-height:1; margin-bottom:8px;
+    }
+    .stat-num .hi { color:var(--cyan); }
+    .stat-lbl { font-size:13px; color:var(--text3); font-weight:500; }
+
+    /* ─── Section scaffold ────────────────────────────────── */
+    .sec {
+      padding:112px 64px;
+      max-width:1200px; margin:0 auto;
+    }
+    .sec-tag {
+      display:inline-flex; align-items:center; gap:10px;
+      font-family:var(--mono); font-size:11px;
+      color:var(--cyan); letter-spacing:2.5px; text-transform:uppercase;
+      margin-bottom:18px;
+    }
+    .sec-tag::before {
+      content:''; display:block;
+      width:26px; height:1px; background:var(--cyan);
+    }
+    .sec-h {
+      font-size:clamp(34px,5vw,54px);
+      font-weight:900; letter-spacing:-2.5px; line-height:.95;
+      margin-bottom:64px;
+    }
+
+    /* ─── Timeline ────────────────────────────────────────── */
+    .timeline { position:relative; padding-left:36px; }
+    .timeline::before {
+      content:'';
+      position:absolute; left:0; top:8px; bottom:8px; width:1px;
+      background:linear-gradient(to bottom,var(--cyan) 0%,rgba(2,132,199,.1) 100%);
+    }
+    .tl-item {
+      position:relative; margin-bottom:56px;
+      opacity:0; transform:translateY(32px);
+      transition:opacity .65s ease, transform .65s ease;
+    }
+    .tl-item.vis { opacity:1; transform:translateY(0); }
+    .tl-dot {
+      position:absolute; left:-40px; top:22px;
+      width:10px; height:10px; border-radius:50%;
+      background:var(--cyan); border:2px solid var(--bg);
+      box-shadow:0 0 14px var(--cyan);
+    }
+    .tl-dot.purple {
+      background:var(--purple);
+      box-shadow:0 0 14px var(--purple);
+    }
+    .exp-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px; padding:40px;
+      position:relative; overflow:hidden;
+      transition:border-color .3s, box-shadow .3s;
+    }
+
+    /* ─── Architecture modal ─────────────────────────────── */
+    .arch-overlay {
+      position:fixed; inset:0; z-index:9999;
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; visibility:hidden;
+      transition:opacity .3s, visibility 0s linear .3s;
+    }
+    .arch-overlay.open {
+      opacity:1; visibility:visible;
+      transition:opacity .3s, visibility 0s;
+    }
+    .arch-modal {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 32px 24px;
+      width:94vw;
+      max-width:1400px;
+      max-height:88vh;
+      overflow-y:auto;
+      transform:translateY(24px) scale(.97);
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
+      box-shadow:0 25px 60px rgba(0,0,0,.18);
+    }
+    .arch-overlay.open .arch-modal {
+      transform:translateY(0) scale(1);
+    }
+    .arch-modal-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .arch-modal-title {
+      font-family:var(--mono); font-size:11px; font-weight:700;
+      color:var(--cyan); letter-spacing:1.5px; text-transform:uppercase;
+    }
+    .arch-modal-close {
+      width:32px; height:32px; border-radius:50%;
+      border:1px solid var(--border);
+      background:var(--surface);
+      color:var(--text2);
+      font-size:18px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .2s, border-color .2s;
+    }
+    .arch-modal-close:hover {
+      background:var(--cyan10); border-color:var(--cyan);
+      color:var(--cyan);
+    }
+    .arch-modal svg { width:100%; height:auto; display:block; }
+    .arch-diagram { display:none; }
+    .arch-diagram.active { display:block; }
+    .flip-pill {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:7px 16px;
+      background:var(--cyan10);
+      border:1px solid var(--cyan20);
+      border-radius:100px;
+      font-size:11px; font-weight:700;
+      color:var(--cyan);
+      cursor:pointer;
+      font-family:'Inter',sans-serif;
+      transition:background .2s, border-color .2s, transform .15s;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .flip-pill:hover {
+      background:var(--cyan20);
+      border-color:var(--cyan);
+      transform:translateY(-1px);
+    }
+    .exp-card::before {
+      content:'';
+      position:absolute; inset:0;
+      background:linear-gradient(140deg,var(--cyan10) 0%,transparent 55%);
+      opacity:0; transition:opacity .35s;
+      pointer-events:none;
+    }
+    .exp-card:hover { border-color:rgba(2,132,199,.3); box-shadow:0 0 48px rgba(2,132,199,.05); }
+    .exp-card:hover::before { opacity:1; }
+    .exp-head {
+      display:flex; justify-content:space-between; align-items:flex-start;
+      flex-wrap:wrap; gap:14px; margin-bottom:6px;
+    }
+    .exp-role { font-size:21px; font-weight:800; color:var(--text); }
+    .exp-badge-date {
+      font-family:var(--mono); font-size:11px;
+      color:var(--cyan); background:var(--cyan10);
+      border:1px solid var(--cyan20);
+      padding:5px 14px; border-radius:100px;
+      white-space:nowrap;
+    }
+    .exp-badge-date.p { color:var(--purple); background:var(--purple10); border-color:var(--purple20); }
+    .exp-co { font-size:14px; color:var(--text2); margin-bottom:4px; }
+    .exp-sub { font-size:13px; color:var(--text3); font-style:italic; margin-bottom:22px; }
+    .promo-chip {
+      display:inline-flex; align-items:center; gap:7px;
+      padding:5px 14px;
+      background:linear-gradient(135deg,rgba(109,40,217,.18),rgba(2,132,199,.12));
+      border:1px solid rgba(109,40,217,.3); border-radius:100px;
+      font-size:11px; font-weight:700; color:#6d28d9;
+      margin-bottom:26px;
+    }
+    .exp-list { list-style:none; display:flex; flex-direction:column; gap:15px; }
+    .exp-list li {
+      display:flex; gap:12px;
+      font-size:14px; color:var(--text2); line-height:1.65;
+    }
+    .exp-list li::before {
+      content:'▸'; color:var(--cyan);
+      flex-shrink:0; margin-top:2px; font-size:11px;
+    }
+    .exp-list li b { color:var(--text); font-weight:600; }
+    .chips {
+      display:flex; flex-wrap:wrap; gap:8px; margin-top:26px;
+    }
+    .chip {
+      display:inline-flex; align-items:center; gap:4px;
+      padding:4px 12px;
+      background:rgba(16,217,160,.1);
+      border:1px solid rgba(16,217,160,.25);
+      border-radius:7px;
+      font-size:11px; font-weight:700;
+      color:var(--green);
+      font-family:var(--mono);
+    }
+    .chip.p {
+      background:var(--purple10); border-color:var(--purple20); color:#6d28d9;
+    }
+
+    /* ─── Skills ──────────────────────────────────────────── */
+    .skills-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+      gap:20px;
+    }
+    .sk-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:32px;
+      opacity:0; transform:translateY(24px);
+      transition:opacity .6s ease, transform .6s ease, border-color .3s, box-shadow .3s;
+    }
+    .sk-card.vis { opacity:1; transform:translateY(0); }
+    .sk-card:hover { border-color:rgba(2,132,199,.28); box-shadow:0 0 40px rgba(2,132,199,.04); }
+    .sk-head { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+    .sk-ico {
+      width:42px; height:42px; border-radius:12px;
+      background:var(--cyan10);
+      display:flex; align-items:center; justify-content:center; color:var(--cyan);
+    }
+    .sk-ico svg { width:20px; height:20px; }
+    .sk-title {
+      font-size:12px; font-weight:800;
+      letter-spacing:1.5px; text-transform:uppercase; color:var(--text);
+    }
+    .sk-tags { display:flex; flex-wrap:wrap; gap:8px; }
+    .sk-tag {
+      padding:6px 14px; border-radius:9px;
+      background:var(--surface2); border:1px solid var(--border);
+      font-size:13px; color:var(--text2); font-weight:500;
+      cursor:default; transition:all .2s;
+    }
+    .sk-tag:hover {
+      background:var(--cyan10); border-color:var(--cyan20);
+      color:var(--cyan); transform:translateY(-2px);
+    }
+
+    /* ─── Education ───────────────────────────────────────── */
+    .edu-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:44px;
+      display:flex; gap:32px; align-items:flex-start;
+      transition:border-color .3s, box-shadow .3s;
+    }
+    .edu-card:hover { border-color:rgba(109,40,217,.4); box-shadow:0 0 48px rgba(109,40,217,.06); }
+    .edu-ico {
+      width:68px; height:68px; flex-shrink:0;
+      background:var(--purple10); border-radius:18px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:30px;
+    }
+    .edu-school { font-size:23px; font-weight:800; margin-bottom:4px; }
+    .edu-deg { font-size:15px; color:var(--text2); margin-bottom:18px; }
+    .edu-row { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+    .edu-meta-i {
+      display:flex; align-items:center; gap:6px;
+      font-size:13px; color:var(--text3);
+    }
+    .edu-meta-i svg { width:13px; height:13px; color:var(--cyan); }
+    .cgpa {
+      font-family:var(--mono); font-size:14px; font-weight:700;
+      padding:6px 18px; border-radius:100px;
+      background:linear-gradient(135deg,rgba(109,40,217,.18),rgba(2,132,199,.12));
+      border:1px solid rgba(109,40,217,.3); color:#6d28d9;
+    }
+
+    /* ─── Leadership ──────────────────────────────────────── */
+    .lead-card {
+      background:linear-gradient(140deg,var(--surface),rgba(109,40,217,.06));
+      border:1px solid rgba(109,40,217,.2); border-radius:20px;
+      padding:44px; display:flex; gap:28px; align-items:flex-start;
+      transition:border-color .3s;
+    }
+    .lead-card:hover { border-color:rgba(109,40,217,.45); }
+    .lead-ico {
+      width:58px; height:58px; flex-shrink:0;
+      background:var(--purple10); border-radius:16px;
+      display:flex; align-items:center; justify-content:center;
+      color:var(--purple);
+    }
+    .lead-ico svg { width:26px; height:26px; }
+    .lead-title { font-size:21px; font-weight:800; margin-bottom:4px; }
+    .lead-co { font-size:14px; color:var(--text2); margin-bottom:18px; }
+    .lead-body { font-size:15px; color:var(--text2); line-height:1.75; }
+    .lead-body b { color:var(--text); font-weight:600; }
+    .lead-body em { color:var(--cyan); font-style:normal; font-weight:600; }
+
+    /* ─── Contact ─────────────────────────────────────────── */
+    .contact-band {
+      background:var(--bg2);
+      border-top:1px solid var(--border);
+      padding:100px 64px; text-align:center;
+    }
+    .contact-inner { max-width:600px; margin:0 auto; }
+    .contact-sub { font-size:16px; color:var(--text3); line-height:1.8; margin-bottom:48px; }
+    .contact-links { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+    .c-link {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:16px 26px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:14px; color:var(--text2);
+      text-decoration:none; font-size:14px; font-weight:500;
+      transition:all .2s;
+    }
+    .c-link svg { width:18px; height:18px; }
+    .c-link:hover {
+      background:var(--cyan10); border-color:var(--cyan20);
+      color:var(--cyan); transform:translateY(-4px);
+      box-shadow:0 8px 28px rgba(2,132,199,.12);
+    }
+
+    /* ─── Footer ──────────────────────────────────────────── */
+    footer {
+      padding:26px 64px; text-align:center;
+      font-size:13px; color:var(--text3);
+      border-top:1px solid var(--border);
+    }
+    footer b { color:var(--cyan); font-weight:600; }
+
+    /* ─── Responsive ──────────────────────────────────────── */
+    @media(max-width:768px) {
+      nav { padding:18px 24px; }
+      nav ul { display:none; }
+      .hero, .sec { padding:80px 24px; }
+      .hero { padding:120px 24px 80px; }
+      .stats-wrap { grid-template-columns:repeat(2,1fr); }
+      .hero-name { letter-spacing:-3px; }
+      .edu-card { flex-direction:column; }
+      .lead-card { flex-direction:column; }
+      .contact-band { padding:80px 24px; }
+      footer { padding:26px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress"></div>
+
+<!-- Cursor -->
+
+<!-- ── Nav ──────────────────────────────────────────────── -->
+<nav id="nav">
+  <a href="#home" class="logo">Arjun <span>Aryan</span></a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────── -->
+<section class="hero" id="home">
+  <canvas id="canvas"></canvas>
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+
+  <!-- Floating tech icons -->
+  <div class="ficons" aria-hidden="true">
+    <div class="fi" style="--x:3%;  --y:12%; --d:0s;   --dur:8s;  --r:-6deg"><i class="devicon-java-plain colored"></i></div>
+    <div class="fi" style="--x:90%; --y:10%; --d:1.2s; --dur:9s;  --r:5deg" ><i class="devicon-spring-plain colored"></i></div>
+    <div class="fi" style="--x:2%;  --y:50%; --d:2.1s; --dur:7s;  --r:-4deg"><i class="devicon-docker-plain colored"></i></div>
+    <div class="fi" style="--x:91%; --y:45%; --d:3s;   --dur:10s; --r:7deg" ><i class="devicon-python-plain colored"></i></div>
+    <div class="fi" style="--x:6%;  --y:80%; --d:0.7s; --dur:8.5s;--r:-8deg"><i class="devicon-git-plain colored"></i></div>
+    <div class="fi" style="--x:88%; --y:78%; --d:1.9s; --dur:9.5s;--r:4deg" ><i class="devicon-mysql-plain colored"></i></div>
+    <div class="fi" style="--x:44%; --y:4%;  --d:2.6s; --dur:7.5s;--r:-3deg"><i class="devicon-linux-plain colored"></i></div>
+    <div class="fi" style="--x:50%; --y:88%; --d:4s;   --dur:8s;  --r:6deg" ><i class="devicon-github-original colored"></i></div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-pill">
+      <span class="pulse-dot"></span>
+      Available for opportunities
+    </div>
+    <h1 class="hero-name">Arjun<br/>Aryan</h1>
+    <p class="hero-role">
+      Software Engineer 2 &nbsp;·&nbsp; <em>PayPal</em> &nbsp;·&nbsp;
+      <span id="tw"></span><span class="typewriter-cursor"></span>
+    </p>
+    <p class="hero-bio">
+      Building distributed systems that handle <strong>400M+ API calls</strong> and
+      <strong>4B+ database writes</strong> every single day.
+      IIT Roorkee graduate obsessed with performance, reliability and elegant architecture.
+    </p>
+    <div class="hero-btns">
+      <a href="mailto:arjunaryanre@gmail.com" class="btn-p">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        Get in Touch
+      </a>
+      <a href="https://www.linkedin.com/in/arjunaryan/" target="_blank" class="btn-s">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ─────────────────────────────────────────────── -->
+<div class="stats-band" id="about">
+  <div class="stats-wrap">
+    <div class="stat">
+      <div class="stat-ico">
+        <!-- zap icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="stat-num"><span class="cnt hi" data-to="400">0</span>M+</div>
+      <div class="stat-lbl">API Calls Daily</div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico">
+        <!-- database icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      </div>
+      <div class="stat-num"><span class="cnt hi" data-to="4">0</span>B+</div>
+      <div class="stat-lbl">DB Writes Daily</div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico">
+        <!-- dollar-sign icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="stat-num">$<span class="cnt hi" data-to="400">0</span>K</div>
+      <div class="stat-lbl">Annual Cost Saved</div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico">
+        <!-- activity icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="stat-num"><span class="cnt hi" data-to="35">0</span>%</div>
+      <div class="stat-lbl">P99 Latency Reduced</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Experience ─────────────────────────────────────────── -->
+<div class="sec" id="experience">
+  <div class="sec-tag">Professional Journey</div>
+  <h2 class="sec-h">Experience</h2>
+
+  <div class="timeline">
+
+    <!-- PayPal -->
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="exp-card">
+        <div class="exp-head">
+          <div>
+            <div class="exp-role">Software Engineer 2</div>
+            <div class="exp-co">PayPal India Pvt. Ltd. &nbsp;·&nbsp; Bengaluru</div>
+            <div class="exp-sub">Activities Team — transaction history for consumers &amp; merchants</div>
+          </div>
+          <div class="exp-badge-date">Jul 2022 — Present</div>
+        </div>
+        <div class="promo-chip">🏆&nbsp; Promoted SE1 → SE2 · February 2025</div>
+<ul class="exp-list">
+          <li><div><b>Saved $400K annually</b> by re-architecting a high-throughput stateless microservice — load balancing, REST response compression, JVM tuning — delivering 35% P99 latency reduction, 20× fewer GC pauses, and 8× throughput gain. Owned full lifecycle: design → capacity planning → production rollout. <button class="flip-pill" id="flip-trigger-pill">▦ see architecture</button></div></li>
+          <li><div><b>Designed a shadow-testing framework</b> for zero-downtime migration of high-volume distributed services, enabling real-time traffic comparison between legacy and new code paths before any cutover. <button class="flip-pill" id="flip-trigger-pill-2">▦ see architecture</button></div></li>
+          <li><div><b>Architected the rewards-tracking backend</b> for PayPal Activities — event-driven integrations across teams surfacing incentive-based shopping insights. Handles 5–6M transactions/day end-to-end. <button class="flip-pill" id="flip-trigger-pill-3">▦ see architecture</button></div></li>
+          <li><div><b>Extended search API with OR-filtering</b>, collaborating with DBAs on index strategy for high-cardinality fields to keep response times under one second at scale. <button class="flip-pill" id="flip-trigger-pill-4">▦ see architecture</button></div></li>
+          <li><div><b>Led platform migration from legacy RPC to RESTful APIs</b>, eliminating 200M+ daily legacy calls. Wrote the migration strategy, runbooks, and coordinated cross-team rollouts.</div></li>
+          <li><div><b>Owned observability &amp; incident response</b>: built 30+ Datadog/Splunk dashboards, configured PagerDuty SLA-based escalation, and led the org-wide Splunk → Datadog migration as primary POC.</div></li>
+          <li><div><b>Built end-to-end Synchrony cashback pipeline</b> — third-party ingestion, transformation, and storage into Activities. Processing 14M transactions/day.</div></li>
+          <li><div><b>Launched package tracking as a new domain</b> — storing 9M records/day with fault-tolerant async processing from PayPal transactions and email-synced carriers.</div></li>
+          <li><div><b>Consolidated three non-payment microservices</b> into the core payment pipeline. Migrated 35M calls/day with zero downtime.</div></li>
+        </ul>
+        <div class="chips">
+          <span class="chip">$400K saved</span>
+          <span class="chip">35% latency ↓</span>
+          <span class="chip">8× throughput</span>
+          <span class="chip">200M+ calls migrated</span>
+          <span class="chip">14M txns/day</span>
+          <span class="chip">9M records/day</span>
+          <span class="chip">99.99% uptime</span>
+        </div>
+      </div><!-- /exp-card -->
+    </div>
+
+    <!-- ── Architecture diagrams (shown in modal) ── -->
+    <template id="arch-diag-1">
+      <svg viewBox="0 0 956 600" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" style="width:100%;height:auto;display:block;">
+            <defs>
+              <marker id="fb-gr" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/></marker>
+              <marker id="fb-bl" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#0284c7" opacity=".8"/></marker>
+            </defs>
+            <!-- BEFORE panel -->
+            <rect x="2" y="2" width="444" height="294" rx="12" fill="rgba(0,0,0,.02)" stroke="rgba(0,0,0,.07)" stroke-width="1" stroke-dasharray="6,4"/>
+            <text x="18" y="22" font-size="11" font-weight="700" fill="#64748b" letter-spacing=".5">BEFORE — Vertical (Bottleneck)</text>
+            <rect x="163" y="32" width="120" height="30" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+            <text x="223" y="47" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">Request</text>
+            <line x1="223" y1="62" x2="223" y2="74" stroke="#64748b" stroke-width="1.5" marker-end="url(#fb-gr)"/>
+            <rect x="148" y="76" width="150" height="30" rx="7" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5"/>
+            <text x="223" y="91" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">Processing System</text>
+            <line x1="223" y1="106" x2="223" y2="118" stroke="#64748b" stroke-width="1.5" marker-end="url(#fb-gr)"/>
+            <rect x="103" y="120" width="240" height="30" rx="7" fill="rgba(0,0,0,.05)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="223" y="131" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#475569" font-weight="700">Enrichment System</text>
+            <text x="223" y="143" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#94a3b8">⚠ Single shared — bottleneck</text>
+            <line x1="123" y1="135" x2="72"  y2="172" stroke="#64748b" stroke-width="1" stroke-opacity=".6" marker-end="url(#fb-gr)"/>
+            <line x1="223" y1="150" x2="223" y2="172" stroke="#64748b" stroke-width="1" stroke-opacity=".6" marker-end="url(#fb-gr)"/>
+            <line x1="323" y1="135" x2="374" y2="172" stroke="#64748b" stroke-width="1" stroke-opacity=".6" marker-end="url(#fb-gr)"/>
+            <text x="56"  y="168" text-anchor="middle" font-size="8" fill="#475569">thread 1</text>
+            <text x="223" y="168" text-anchor="middle" font-size="8" fill="#475569">thread 2</text>
+            <text x="391" y="168" text-anchor="middle" font-size="8" fill="#475569">thread n</text>
+            <rect x="22"  y="174" width="100" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+            <text x="72"  y="187" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#475569">Summary 1</text>
+            <rect x="173" y="174" width="100" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+            <text x="223" y="187" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#475569">Summary 2</text>
+            <rect x="324" y="174" width="100" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+            <text x="374" y="187" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#475569">Summary n</text>
+            <line x1="72"  y1="200" x2="192" y2="216" stroke="#64748b" stroke-width="1" stroke-opacity=".5" marker-end="url(#fb-gr)"/>
+            <line x1="223" y1="200" x2="223" y2="216" stroke="#64748b" stroke-width="1" stroke-opacity=".5" marker-end="url(#fb-gr)"/>
+            <line x1="374" y1="200" x2="254" y2="216" stroke="#64748b" stroke-width="1" stroke-opacity=".5" marker-end="url(#fb-gr)"/>
+            <rect x="103" y="218" width="240" height="30" rx="7" fill="rgba(0,0,0,.05)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="223" y="229" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#475569" font-weight="700">Downstream Gateway</text>
+            <text x="223" y="241" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#94a3b8">⚠ Single shared — bottleneck</text>
+            <line x1="223" y1="248" x2="223" y2="258" stroke="#64748b" stroke-width="1" stroke-opacity=".5" marker-end="url(#fb-gr)"/>
+            <rect x="22" y="260" width="420" height="24" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+            <text x="80"  y="272" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#64748b" font-weight="600">PRS</text>
+            <text x="160" y="272" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#475569" font-weight="600">INVOICE</text>
+            <text x="242" y="272" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#475569" font-weight="600">PAYOUT</text>
+            <text x="320" y="272" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#475569" font-weight="600">RM</text>
+            <text x="392" y="272" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#475569" font-weight="600">CRYPTO</text>
+            <!-- CENTER ARROW -->
+            <rect x="454" y="126" width="48" height="46" rx="10" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.2)" stroke-width="1"/>
+            <text x="478" y="143" text-anchor="middle" font-size="16" fill="#0284c7">→</text>
+            <text x="478" y="158" text-anchor="middle" font-size="8" fill="#0284c7" font-weight="700">Built</text>
+            <!-- AFTER panel -->
+            <rect x="508" y="2" width="446" height="294" rx="12" fill="rgba(2,132,199,.03)" stroke="rgba(2,132,199,.14)" stroke-width="1"/>
+            <text x="524" y="22" font-size="11" font-weight="700" fill="#0284c7" letter-spacing=".5">AFTER — Horizontal (Per-thread Parallel)</text>
+            <rect x="671" y="32" width="120" height="30" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+            <text x="731" y="47" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">Request</text>
+            <line x1="731" y1="62" x2="731" y2="74" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".5" marker-end="url(#fb-bl)"/>
+            <rect x="656" y="76" width="150" height="30" rx="7" fill="#0284c7"/>
+            <text x="731" y="91" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="white" font-weight="700">Processing System</text>
+            <line x1="656" y1="91" x2="582" y2="118" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="731" y1="106" x2="731" y2="118" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="806" y1="91" x2="880" y2="118" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <text x="566" y="114" text-anchor="middle" font-size="8" fill="#64748b">thread 1</text>
+            <text x="731" y="114" text-anchor="middle" font-size="8" fill="#64748b">thread 2</text>
+            <text x="897" y="114" text-anchor="middle" font-size="8" fill="#64748b">thread n</text>
+            <rect x="522" y="120" width="120" height="30" rx="7" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="582" y="135" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#0f172a" font-weight="600">Enrichment 1</text>
+            <rect x="671" y="120" width="120" height="30" rx="7" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="731" y="135" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#0f172a" font-weight="600">Enrichment 2</text>
+            <rect x="820" y="120" width="120" height="30" rx="7" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="880" y="135" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#0f172a" font-weight="600">Enrichment n</text>
+            <line x1="582" y1="150" x2="582" y2="164" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="731" y1="150" x2="731" y2="164" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="880" y1="150" x2="880" y2="164" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <rect x="522" y="166" width="120" height="26" rx="6" fill="rgba(2,132,199,.06)" stroke="rgba(2,132,199,.3)" stroke-width="1"/>
+            <text x="582" y="179" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#334155">Summary 1</text>
+            <rect x="671" y="166" width="120" height="26" rx="6" fill="rgba(2,132,199,.06)" stroke="rgba(2,132,199,.3)" stroke-width="1"/>
+            <text x="731" y="179" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#334155">Summary 2</text>
+            <rect x="820" y="166" width="120" height="26" rx="6" fill="rgba(2,132,199,.06)" stroke="rgba(2,132,199,.3)" stroke-width="1"/>
+            <text x="880" y="179" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#334155">Summary n</text>
+            <line x1="582" y1="192" x2="582" y2="206" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="731" y1="192" x2="731" y2="206" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <line x1="880" y1="192" x2="880" y2="206" stroke="#0284c7" stroke-width="1" stroke-opacity=".45" marker-end="url(#fb-bl)"/>
+            <rect x="522" y="208" width="120" height="30" rx="7" fill="#0284c7"/>
+            <text x="582" y="223" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="white" font-weight="700">Gateway 1</text>
+            <rect x="671" y="208" width="120" height="30" rx="7" fill="#0284c7"/>
+            <text x="731" y="223" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="white" font-weight="700">Gateway 2</text>
+            <rect x="820" y="208" width="120" height="30" rx="7" fill="#0284c7"/>
+            <text x="880" y="223" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="white" font-weight="700">Gateway n</text>
+            <line x1="582" y1="238" x2="700" y2="254" stroke="#0284c7" stroke-width="1" stroke-opacity=".4" marker-end="url(#fb-bl)"/>
+            <line x1="731" y1="238" x2="731" y2="254" stroke="#0284c7" stroke-width="1" stroke-opacity=".4" marker-end="url(#fb-bl)"/>
+            <line x1="880" y1="238" x2="762" y2="254" stroke="#0284c7" stroke-width="1" stroke-opacity=".4" marker-end="url(#fb-bl)"/>
+            <rect x="520" y="256" width="432" height="24" rx="6" fill="rgba(109,40,217,.08)" stroke="rgba(109,40,217,.22)" stroke-width="1"/>
+            <text x="580" y="268" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9" font-weight="600">PRS</text>
+            <text x="646" y="268" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9" font-weight="600">INVOICE</text>
+            <text x="726" y="268" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9" font-weight="600">PAYOUT</text>
+            <text x="800" y="268" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9" font-weight="600">RM</text>
+            <text x="868" y="268" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9" font-weight="600">CRYPTO</text>
+            <!-- Optimisation chips -->
+            <rect x="0"   y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="59"  y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">In-house DAG lib</text>
+            <rect x="124" y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="183" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Thread pool tuning</text>
+            <rect x="248" y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="307" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Gzip compression</text>
+            <rect x="372" y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="431" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Java 17 migration</text>
+            <rect x="496" y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="555" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Memory leak fix</text>
+            <rect x="620" y="310" width="118" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="679" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Bean scope optimise</text>
+            <rect x="744" y="310" width="110" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="799" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">CPU bottleneck fix</text>
+            <rect x="860" y="310" width="96" height="18" rx="9" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="908" y="319" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#0284c7" font-weight="600">Async tuning</text>
+            <!-- Impact badges -->
+            <rect x="0"   y="336" width="120" height="16" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="60"  y="344" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#059669" font-weight="700">$400K saved</text>
+            <rect x="128" y="336" width="128" height="16" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="192" y="344" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#059669" font-weight="700">35% P99 latency ↓</text>
+            <rect x="264" y="336" width="110" height="16" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="319" y="344" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#059669" font-weight="700">8× throughput</text>
+            <rect x="382" y="336" width="126" height="16" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="445" y="344" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="#059669" font-weight="700">GC pauses ↓ 20×</text>
+
+            <!-- ── Divider ────────────────────────────────── -->
+            <line x1="0" y1="362" x2="956" y2="362" stroke="rgba(0,0,0,.08)" stroke-width="1"/>
+            <text x="0" y="378" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1">WHAT CHANGED — 9 OPTIMISATIONS</text>
+
+            <!-- Vertical column separators -->
+            <line x1="320" y1="366" x2="320" y2="592" stroke="rgba(0,0,0,.06)" stroke-width="1"/>
+            <line x1="638" y1="366" x2="638" y2="592" stroke="rgba(0,0,0,.06)" stroke-width="1"/>
+
+            <!-- ── Column 1 ────────────────────────────────── -->
+            <!-- 01 In-house DAG Library -->
+            <text x="4" y="400" font-size="10" font-weight="700" fill="#0284c7">01</text>
+            <text x="24" y="400" font-size="10" font-weight="700" fill="#0f172a">In-house DAG Library</text>
+            <text x="24" y="414" font-size="9.5" fill="#64748b">Replaced deprecated DGTask lib with</text>
+            <text x="24" y="426" font-size="9.5" fill="#64748b">in-house DAG resolver for greater</text>
+            <text x="24" y="438" font-size="9.5" fill="#64748b">control over performance &amp; maintainability</text>
+
+            <!-- 02 Thread Pool Tuning -->
+            <text x="4" y="462" font-size="10" font-weight="700" fill="#0284c7">02</text>
+            <text x="24" y="462" font-size="10" font-weight="700" fill="#0f172a">Thread Pool Tuning</text>
+            <text x="24" y="476" font-size="9.5" fill="#64748b">Optimised thread pool configs to align</text>
+            <text x="24" y="488" font-size="9.5" fill="#64748b">with workload demands, reducing</text>
+            <text x="24" y="500" font-size="9.5" fill="#64748b">contention and improving efficiency</text>
+
+            <!-- 03 Gzip Compression -->
+            <text x="4" y="524" font-size="10" font-weight="700" fill="#0284c7">03</text>
+            <text x="24" y="524" font-size="10" font-weight="700" fill="#0f172a">Gzip Compression</text>
+            <text x="24" y="538" font-size="9.5" fill="#64748b">Enabled Gzip when consuming downstream</text>
+            <text x="24" y="550" font-size="9.5" fill="#64748b">responses — significantly reduced</text>
+            <text x="24" y="562" font-size="9.5" fill="#64748b">HTTP read time &amp; data transfer overhead</text>
+
+            <!-- ── Column 2 ────────────────────────────────── -->
+            <!-- 04 Java 17 Migration -->
+            <text x="326" y="400" font-size="10" font-weight="700" fill="#0284c7">04</text>
+            <text x="346" y="400" font-size="10" font-weight="700" fill="#0f172a">Java 17 Migration</text>
+            <text x="346" y="414" font-size="9.5" fill="#64748b">Upgraded to Java 17 for performance</text>
+            <text x="346" y="426" font-size="9.5" fill="#64748b">enhancements, improved GC and</text>
+            <text x="346" y="438" font-size="9.5" fill="#64748b">security updates — better efficiency</text>
+
+            <!-- 05 Memory Leak Fix -->
+            <text x="326" y="462" font-size="10" font-weight="700" fill="#0284c7">05</text>
+            <text x="346" y="462" font-size="10" font-weight="700" fill="#0f172a">Memory Leak Fix</text>
+            <text x="346" y="476" font-size="9.5" fill="#64748b">Fixed a rarely-invoked flow that</text>
+            <text x="346" y="488" font-size="9.5" fill="#64748b">caused stack overflow when triggered,</text>
+            <text x="346" y="500" font-size="9.5" fill="#64748b">eliminating memory instability</text>
+
+            <!-- 06 Bean Scope Optimisation -->
+            <text x="326" y="524" font-size="10" font-weight="700" fill="#0284c7">06</text>
+            <text x="346" y="524" font-size="10" font-weight="700" fill="#0f172a">Bean Scope Optimisation</text>
+            <text x="346" y="538" font-size="9.5" fill="#64748b">Singleton beans for stateless components;</text>
+            <text x="346" y="550" font-size="9.5" fill="#64748b">prototype beans where needed to</text>
+            <text x="346" y="562" font-size="9.5" fill="#64748b">prevent shared state in multi-threading</text>
+
+            <!-- ── Column 3 ────────────────────────────────── -->
+            <!-- 07 CPU Bottleneck Fix -->
+            <text x="644" y="400" font-size="10" font-weight="700" fill="#0284c7">07</text>
+            <text x="664" y="400" font-size="10" font-weight="700" fill="#0f172a">CPU Bottleneck Fix</text>
+            <text x="664" y="414" font-size="9.5" fill="#64748b">Deserialising payment_extensions in</text>
+            <text x="664" y="426" font-size="9.5" fill="#64748b">domain response consumed excessive</text>
+            <text x="664" y="438" font-size="9.5" fill="#64748b">CPU — fixed in core raptor infra lib</text>
+
+            <!-- 08 Async Task Instrumentation -->
+            <text x="644" y="462" font-size="10" font-weight="700" fill="#0284c7">08</text>
+            <text x="664" y="462" font-size="10" font-weight="700" fill="#0f172a">Async Task Instrumentation</text>
+            <text x="664" y="476" font-size="9.5" fill="#64748b">Improved observability by binding</text>
+            <text x="664" y="488" font-size="9.5" fill="#64748b">instrumentation in async tasks</text>
+            <text x="664" y="500" font-size="9.5" fill="#64748b">directly to the main thread</text>
+
+            <!-- 09 Equitable Load Distribution -->
+            <text x="644" y="524" font-size="10" font-weight="700" fill="#0284c7">09</text>
+            <text x="664" y="524" font-size="10" font-weight="700" fill="#0f172a">Equitable Load Distribution</text>
+            <text x="664" y="538" font-size="9.5" fill="#64748b">Moved from vertical (single enrichment</text>
+            <text x="664" y="550" font-size="9.5" fill="#64748b">&amp; gateway) to horizontal per-thread</text>
+            <text x="664" y="562" font-size="9.5" fill="#64748b">parallel — the architecture above</text>
+          </svg>
+    </template>
+
+    <template id="arch-diag-2">
+      <svg viewBox="0 0 876 290" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" style="width:100%;height:auto;display:block;">
+            <defs>
+              <marker id="d2p" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#0284c7" opacity=".8"/></marker>
+              <marker id="d2s" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8" opacity=".7"/></marker>
+            </defs>
+            <text x="10" y="58" font-size="9" font-weight="700" fill="#0284c7" letter-spacing=".5">PRIMARY PATH</text>
+            <text x="10" y="180" font-size="9" font-weight="700" fill="#94a3b8" letter-spacing=".5">SHADOW PATH — async, no user impact</text>
+            <!-- User -->
+            <rect x="10" y="66" width="90" height="34" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="55" y="78" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">User</text>
+            <text x="55" y="91" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#64748b">live request</text>
+            <line x1="100" y1="83" x2="126" y2="83" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d2p)"/>
+            <!-- API Gateway -->
+            <rect x="128" y="62" width="130" height="42" rx="9" fill="#0284c7"/>
+            <text x="193" y="78" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="white" font-weight="700">API Gateway</text>
+            <text x="193" y="93" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="rgba(255,255,255,.8)">traffic split point</text>
+            <!-- Primary fork -->
+            <line x1="258" y1="76" x2="306" y2="76" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d2p)"/>
+            <rect x="308" y="62" width="150" height="34" rx="8" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="383" y="74" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Production</text>
+            <text x="383" y="87" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Service</text>
+            <line x1="458" y1="79" x2="494" y2="79" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d2p)"/>
+            <rect x="496" y="62" width="136" height="34" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.5)" stroke-width="1.5"/>
+            <text x="564" y="74" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#059669" font-weight="700">Live Response</text>
+            <text x="564" y="87" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#059669">user sees this ✓</text>
+            <!-- Divider -->
+            <line x1="10" y1="155" x2="866" y2="155" stroke="rgba(0,0,0,.06)" stroke-width="1" stroke-dasharray="3,6"/>
+            <!-- Shadow fork vertical drop -->
+            <line x1="193" y1="104" x2="193" y2="188" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <line x1="193" y1="188" x2="276" y2="188" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#d2s)"/>
+            <rect x="130" y="130" width="126" height="22" rx="6" fill="white" stroke="rgba(0,0,0,.06)" stroke-width="1"/>
+            <text x="193" y="141" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#64748b">% of traffic mirrored async</text>
+            <!-- Shadow Service -->
+            <rect x="278" y="172" width="134" height="34" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="345" y="184" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#64748b" font-weight="600">Shadow Service</text>
+            <text x="345" y="197" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#94a3b8">processes shadow copy</text>
+            <line x1="412" y1="189" x2="446" y2="189" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#d2s)"/>
+            <!-- Family App -->
+            <rect x="448" y="168" width="148" height="42" rx="9" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.55)" stroke-width="2"/>
+            <text x="522" y="181" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#92400e" font-weight="700">Family App</text>
+            <text x="522" y="194" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#b45309">new shadow consumer</text>
+            <text x="522" y="205" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#d97706">★ new component</text>
+            <line x1="596" y1="189" x2="630" y2="189" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#d2s)"/>
+            <!-- Response Comparator -->
+            <rect x="632" y="172" width="136" height="34" rx="8" fill="rgba(109,40,217,.08)" stroke="rgba(109,40,217,.3)" stroke-width="1.5"/>
+            <text x="700" y="184" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#6d28d9" font-weight="600">Response</text>
+            <text x="700" y="197" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#6d28d9" font-weight="600">Comparator</text>
+            <line x1="768" y1="189" x2="820" y2="189" stroke="#6d28d9" stroke-width="1.5" stroke-opacity=".5" marker-end="url(#d2s)"/>
+            <rect x="822" y="172" width="44" height="34" rx="8" fill="rgba(5,150,105,.12)" stroke="rgba(16,185,129,.5)" stroke-width="1.5"/>
+            <text x="844" y="184" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#059669" font-weight="700">Safe</text>
+            <text x="844" y="197" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#059669" font-weight="700">✓</text>
+            <!-- Badges -->
+            <rect x="10" y="242" width="140" height="20" rx="10" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="80" y="252" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#059669" font-weight="700">Zero downtime</text>
+            <rect x="158" y="242" width="174" height="20" rx="10" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+            <text x="245" y="252" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#059669" font-weight="700">No user impact throughout</text>
+            <rect x="340" y="242" width="194" height="20" rx="10" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+            <text x="437" y="252" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#0284c7" font-weight="700">Safe cutover after comparison</text>
+            <rect x="542" y="242" width="188" height="20" rx="10" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.35)" stroke-width="1"/>
+            <text x="636" y="252" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#92400e" font-weight="700">Family App — shadow consumer</text>
+          </svg>
+    </template>
+
+    <template id="arch-diag-3">
+      <svg viewBox="0 0 960 340" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" style="width:100%;height:auto;display:block;">
+        <defs>
+          <marker id="d3p" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#0284c7" opacity=".8"/></marker>
+          <marker id="d3g" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8" opacity=".7"/></marker>
+          <marker id="d3a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#d97706" opacity=".8"/></marker>
+        </defs>
+
+        <!-- ═══ INGESTION FLOW ═══ -->
+        <text x="10" y="24" font-size="9" font-weight="700" fill="#0284c7" letter-spacing=".5">INGESTION FLOW — event-driven, async</text>
+
+        <!-- Event Queue -->
+        <rect x="10" y="40" width="120" height="36" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="70" y="53" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">Event Queue</text>
+        <text x="70" y="67" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#94a3b8">transactions</text>
+        <line x1="130" y1="58" x2="165" y2="58" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3p)"/>
+
+        <!-- Event Consumer -->
+        <rect x="167" y="40" width="145" height="36" rx="8" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="239" y="58" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Event Consumer</text>
+        <line x1="312" y1="58" x2="347" y2="58" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3p)"/>
+
+        <!-- Ingestion Service -->
+        <rect x="349" y="40" width="155" height="36" rx="8" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="426" y="58" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Ingestion Service</text>
+        <line x1="504" y1="58" x2="539" y2="58" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3p)"/>
+
+        <!-- Activity Processor -->
+        <rect x="541" y="40" width="170" height="36" rx="8" fill="#0284c7"/>
+        <text x="626" y="58" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="white" font-weight="700">Activity Processor</text>
+        <line x1="711" y1="58" x2="790" y2="58" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3p)"/>
+
+        <!-- Activity Store -->
+        <rect x="792" y="40" width="130" height="36" rx="8" fill="rgba(109,40,217,.08)" stroke="rgba(109,40,217,.3)" stroke-width="1.5"/>
+        <text x="857" y="53" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#6d28d9" font-weight="600">Activity Store</text>
+        <text x="857" y="67" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9">database</text>
+
+        <!-- Vertical connector: Processor ↔ Rewards Engine -->
+        <line x1="620" y1="76" x2="620" y2="114" stroke="#d97706" stroke-width="1.5" stroke-opacity=".7" marker-end="url(#d3a)"/>
+        <line x1="636" y1="114" x2="636" y2="78" stroke="#d97706" stroke-width="1.5" stroke-opacity=".7" marker-end="url(#d3a)"/>
+
+        <!-- Rewards Engine (shared — center) -->
+        <rect x="541" y="116" width="170" height="44" rx="9" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.55)" stroke-width="2"/>
+        <text x="626" y="132" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="#92400e" font-weight="700">Rewards Engine</text>
+        <text x="626" y="148" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#b45309">enriches with rewards data</text>
+        <text x="626" y="170" text-anchor="middle" font-size="8" fill="#d97706">★ new cross-team integration</text>
+
+        <!-- Label on connector -->
+        <rect x="648" y="84" width="126" height="20" rx="6" fill="white" stroke="rgba(0,0,0,.06)" stroke-width="1"/>
+        <text x="711" y="94" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#64748b">rewards enrichment</text>
+
+        <!-- ═══ DIVIDER ═══ -->
+        <line x1="10" y1="188" x2="930" y2="188" stroke="rgba(0,0,0,.06)" stroke-width="1" stroke-dasharray="3,6"/>
+
+        <!-- ═══ QUERY FLOW ═══ -->
+        <text x="10" y="208" font-size="9" font-weight="700" fill="#94a3b8" letter-spacing=".5">QUERY FLOW — user-facing, synchronous</text>
+
+        <!-- User -->
+        <rect x="10" y="220" width="90" height="36" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="55" y="233" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">User</text>
+        <text x="55" y="247" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#94a3b8">request</text>
+        <line x1="100" y1="238" x2="139" y2="238" stroke="#94a3b8" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3g)"/>
+
+        <!-- Transaction API -->
+        <rect x="141" y="220" width="155" height="36" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="218" y="238" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#475569" font-weight="600">Transaction API</text>
+        <line x1="296" y1="238" x2="335" y2="238" stroke="#94a3b8" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3g)"/>
+
+        <!-- Activity Aggregator -->
+        <rect x="337" y="220" width="170" height="36" rx="8" fill="rgba(2,132,199,.09)" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="422" y="238" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Activity Aggregator</text>
+        <line x1="507" y1="238" x2="546" y2="238" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".6" marker-end="url(#d3p)"/>
+
+        <!-- Platform Service -->
+        <rect x="548" y="220" width="160" height="36" rx="8" fill="#0284c7"/>
+        <text x="628" y="238" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="white" font-weight="700">Platform Service</text>
+        <line x1="708" y1="238" x2="755" y2="238" stroke="#d97706" stroke-width="1.5" stroke-opacity=".7" marker-end="url(#d3a)"/>
+
+        <!-- Rewards Engine (query side) -->
+        <rect x="757" y="220" width="140" height="36" rx="8" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.55)" stroke-width="1.5"/>
+        <text x="827" y="238" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#92400e" font-weight="600">Rewards Engine</text>
+
+        <!-- Response badge -->
+        <rect x="560" y="270" width="200" height="22" rx="6" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.5)" stroke-width="1"/>
+        <text x="660" y="281" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#059669" font-weight="700">Enriched Summary + Rewards ✓</text>
+
+        <!-- Return arrow -->
+        <path d="M560,281 L105,255" stroke="#059669" stroke-width="1" stroke-opacity=".5" stroke-dasharray="4,3" fill="none" marker-end="url(#d3g)"/>
+        <text x="330" y="264" text-anchor="middle" font-size="8" fill="#059669">returns to user</text>
+
+        <!-- ═══ IMPACT BADGES ═══ -->
+        <rect x="10" y="308" width="130" height="20" rx="10" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+        <text x="75" y="318" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#059669" font-weight="700">5–6M txns/day</text>
+
+        <rect x="148" y="308" width="145" height="20" rx="10" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+        <text x="220" y="318" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#0284c7" font-weight="700">Event-driven ingestion</text>
+
+        <rect x="301" y="308" width="160" height="20" rx="10" fill="rgba(2,132,199,.08)" stroke="rgba(2,132,199,.22)" stroke-width="1"/>
+        <text x="381" y="318" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#0284c7" font-weight="700">Cross-team integration</text>
+
+        <rect x="469" y="308" width="175" height="20" rx="10" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.35)" stroke-width="1"/>
+        <text x="556" y="318" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#92400e" font-weight="700">Real-time rewards enrichment</text>
+      </svg>
+    </template>
+
+    <template id="arch-diag-4">
+      <svg viewBox="0 0 876 220" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" style="width:100%;height:auto;display:block;">
+        <defs><marker id="d4" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#0284c7" opacity=".7"/></marker></defs>
+        <rect x="10" y="80" width="110" height="32" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="65" y="96" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="#475569" font-weight="600">Client</text>
+        <line x1="120" y1="96" x2="148" y2="96" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".55" marker-end="url(#d4)"/>
+        <rect x="150" y="80" width="120" height="32" rx="8" fill="#0284c7"/>
+        <text x="210" y="96" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="white" font-weight="700">Search API</text>
+        <line x1="270" y1="96" x2="298" y2="96" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".55" marker-end="url(#d4)"/>
+        <rect x="300" y="68" width="170" height="56" rx="8" fill="rgba(2,132,199,.08)" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="385" y="84" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#0f172a" font-weight="600">Query Builder</text>
+        <text x="385" y="99" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#0284c7">OR Filter Logic</text>
+        <text x="385" y="113" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#64748b">DBA collaborated</text>
+        <line x1="470" y1="96" x2="498" y2="96" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".55" marker-end="url(#d4)"/>
+        <rect x="500" y="68" width="180" height="56" rx="8" fill="rgba(109,40,217,.08)" stroke="#6d28d9" stroke-width="1.5"/>
+        <text x="590" y="84" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#6d28d9" font-weight="600">DB + Composite</text>
+        <text x="590" y="99" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#6d28d9">Index Strategy</text>
+        <text x="590" y="113" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6d28d9">high-cardinality fields</text>
+        <line x1="680" y1="96" x2="708" y2="96" stroke="#0284c7" stroke-width="1.5" stroke-opacity=".55" marker-end="url(#d4)"/>
+        <rect x="710" y="80" width="140" height="32" rx="8" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.5)" stroke-width="1.5"/>
+        <text x="780" y="91" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#059669" font-weight="700">Optimised</text>
+        <text x="780" y="104" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#059669" font-weight="700">Result Set</text>
+        <rect x="298" y="162" width="280" height="18" rx="9" fill="rgba(5,150,105,.1)" stroke="rgba(16,185,129,.4)" stroke-width="1"/>
+        <text x="438" y="171" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#059669" font-weight="700">Sub-second response times at scale</text>
+      </svg>
+    </template>
+
+    <!-- Internship -->
+    <div class="tl-item">
+      <div class="tl-dot purple"></div>
+      <div class="exp-card">
+        <div class="exp-head">
+          <div>
+            <div class="exp-role">AI Module Intern</div>
+            <div class="exp-co">Gladiris Technologies (SpiderG) &nbsp;·&nbsp; Pune</div>
+          </div>
+          <div class="exp-badge-date p">Jun 2021 — Aug 2021</div>
+        </div>
+        <ul class="exp-list">
+          <li><div><b>Built a real-time facial recognition pipeline</b> using YOLO (OpenCV) over RTSP/CCTV streams. Improved match accuracy from 81% to 95% via an image-selection algorithm optimized on frame size.</div></li>
+          <li><div><b>Trained detection models</b> with Haar cascades, contributing to contactless biometric solutions during COVID-19.</div></li>
+        </ul>
+        <div class="chips">
+          <span class="chip p">81% → 95% accuracy</span>
+          <span class="chip p">YOLO + OpenCV</span>
+          <span class="chip p">Real-time CCTV</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Skills ─────────────────────────────────────────────── -->
+<div class="sec" id="skills" style="padding-top:0;">
+  <div class="sec-tag">Capabilities</div>
+  <h2 class="sec-h">Technical Skills</h2>
+  <div class="skills-grid">
+
+    <div class="sk-card">
+      <div class="sk-head">
+        <div class="sk-ico">
+          <!-- code icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="sk-title">Languages</div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Java</span>
+        <span class="sk-tag">C++</span>
+        <span class="sk-tag">Python</span>
+        <span class="sk-tag">SQL</span>
+      </div>
+    </div>
+
+    <div class="sk-card">
+      <div class="sk-head">
+        <div class="sk-ico">
+          <!-- layers icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <div class="sk-title">Frameworks</div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Spring Boot</span>
+        <span class="sk-tag">REST APIs</span>
+        <span class="sk-tag">Microservices</span>
+        <span class="sk-tag">JVM Tuning</span>
+      </div>
+    </div>
+
+    <div class="sk-card">
+      <div class="sk-head">
+        <div class="sk-ico">
+          <!-- server icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        </div>
+        <div class="sk-title">Infrastructure</div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Docker</span>
+        <span class="sk-tag">CI/CD</span>
+        <span class="sk-tag">Messaging Queues</span>
+        <span class="sk-tag">Datadog</span>
+        <span class="sk-tag">Splunk</span>
+        <span class="sk-tag">PagerDuty</span>
+      </div>
+    </div>
+
+    <div class="sk-card">
+      <div class="sk-head">
+        <div class="sk-ico">
+          <!-- cpu icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+        </div>
+        <div class="sk-title">Practices</div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">System Design</span>
+        <span class="sk-tag">Performance Eng.</span>
+        <span class="sk-tag">Observability</span>
+        <span class="sk-tag">Incident Response</span>
+        <span class="sk-tag">Agile</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Education ──────────────────────────────────────────── -->
+<div class="sec" id="education" style="padding-top:0;">
+  <div class="sec-tag">Academic Background</div>
+  <h2 class="sec-h">Education</h2>
+  <div class="edu-card">
+    <div class="edu-ico">🎓</div>
+    <div>
+      <div class="edu-school">Indian Institute of Technology, Roorkee</div>
+      <div class="edu-deg">Bachelor of Technology</div>
+      <div class="edu-row">
+        <span class="edu-meta-i">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Aug 2018 – 2022
+        </span>
+        <span class="cgpa">CGPA &nbsp;8.21 / 10</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Leadership ─────────────────────────────────────────── -->
+<div class="sec" style="padding-top:0; padding-bottom:112px;">
+  <div class="sec-tag">Leadership</div>
+  <h2 class="sec-h">Leadership</h2>
+  <div class="lead-card">
+    <div class="lead-ico">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    </div>
+    <div>
+      <div class="lead-title">Quality Lead</div>
+      <div class="lead-co">PayPal Activities Team</div>
+      <p class="lead-body">
+        Owned code-quality standards and release readiness for components handling
+        <b>400M+ daily requests</b>, maintaining <em>99.99% availability</em> across the platform.
+        Championed engineering best practices, reviewed critical paths, and signed off on production deployments.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Contact ────────────────────────────────────────────── -->
+<div class="contact-band" id="contact">
+  <div class="contact-inner">
+    <div class="sec-tag" style="justify-content:center;">Let's Connect</div>
+    <h2 class="sec-h" style="margin-bottom:18px;">Get in Touch</h2>
+    <p class="contact-sub">
+      Open to discussing distributed systems, Staff/Senior roles, or anything
+      interesting you're building. Always happy to chat.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:arjunaryanre@gmail.com" class="c-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        arjunaryanre@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/arjunaryan/" target="_blank" class="c-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="tel:+918875335241" class="c-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.27 6.27l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +91 88753 35241
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<footer>
+  <b>Arjun Aryan</b> &nbsp;·&nbsp; Designed with precision &nbsp;·&nbsp; 2026
+</footer>
+
+<!-- ── Architecture modal container ──────────────────── -->
+<div class="arch-overlay" id="arch-overlay">
+  <div class="arch-modal">
+    <div class="arch-modal-bar">
+      <span class="arch-modal-title" id="arch-modal-title"></span>
+      <button class="arch-modal-close" id="arch-modal-close-btn">✕</button>
+    </div>
+    <div id="arch-modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Scripts ────────────────────────────────────────────── -->
+<script>
+let mx=0, my=0;
+
+/* ── Scroll progress bar ───────────────────────────────── */
+const progressBar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const pct = scrollY / (document.body.scrollHeight - innerHeight) * 100;
+  progressBar.style.width = pct + '%';
+  document.getElementById('nav').classList.toggle('stuck', scrollY > 60);
+}, { passive:true });
+
+/* ── 3D card tilt ──────────────────────────────────────── */
+document.querySelectorAll('.exp-card, .sk-card, .edu-card, .lead-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    if (card.classList.contains('flipped')) return;
+    card.style.transition = 'transform .1s ease, border-color .3s, box-shadow .3s';
+  });
+  card.addEventListener('mousemove', e => {
+    if (card.classList.contains('flipped')) return;
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform =
+      `perspective(900px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateZ(6px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    if (card.classList.contains('flipped')) return;
+    card.style.transition = 'transform .55s ease, border-color .3s, box-shadow .3s';
+    card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
+  });
+});
+
+/* ── Magnetic buttons ──────────────────────────────────── */
+document.querySelectorAll('.btn-p, .btn-s, .c-link').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width  / 2) * 0.28;
+    const y = (e.clientY - r.top  - r.height / 2) * 0.28;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+    btn.style.transition = 'transform .1s ease';
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
+    btn.style.transition = 'transform .45s cubic-bezier(.23,1,.32,1)';
+  });
+});
+
+/* ── Aurora (interactive) ─────────────────────────────────── */
+const cvs = document.getElementById('canvas');
+const ctx = cvs.getContext('2d');
+function resize(){ cvs.width=cvs.offsetWidth; cvs.height=cvs.offsetHeight; }
+resize(); window.addEventListener('resize', resize);
+
+let amx=0.5, amy=0.5, atmx=0.5, atmy=0.5, aT=0;
+document.addEventListener('mousemove', e=>{
+  atmx = e.clientX / innerWidth;
+  atmy = e.clientY / innerHeight;
+}, {passive:true});
+
+const BANDS = [
+  {rgb:[2,132,199],  a:0.18, y:0.25, spd:0.80, amp:60, ph:0.0},
+  {rgb:[109,40,217], a:0.15, y:0.36, spd:0.55, amp:70, ph:2.1},
+  {rgb:[20,184,166], a:0.12, y:0.48, spd:1.10, amp:48, ph:4.2},
+  {rgb:[99,102,241], a:0.14, y:0.31, spd:0.70, amp:75, ph:1.0},
+  {rgb:[168,85,247], a:0.11, y:0.56, spd:0.90, amp:55, ph:3.3},
+  {rgb:[14,165,233], a:0.13, y:0.20, spd:1.20, amp:42, ph:5.1},
+  {rgb:[79,70,229],  a:0.09, y:0.62, spd:0.65, amp:58, ph:6.0},
+];
+
+function drawAurora(){
+  amx += (atmx - amx) * 0.045;
+  amy += (atmy - amy) * 0.045;
+  aT += 0.009;
+  ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+  BANDS.forEach(b => {
+    const W=cvs.width, H=cvs.height;
+    const baseY = (b.y + (amy-0.5)*0.20) * H;
+    const amp   = b.amp + amx * 35;
+    const bH    = H * 0.22;
+
+    const getY = x => {
+      const p = x / W;
+      return baseY
+        + Math.sin(p*Math.PI*2.5 + aT*b.spd + b.ph + amx*Math.PI*1.6) * amp
+        + Math.sin(p*Math.PI*1.4 + aT*b.spd*0.6 + b.ph+1)            * amp*0.35
+        + Math.sin(p*Math.PI*4.0 + aT*b.spd*1.3 + b.ph+2)            * amp*0.12;
+    };
+
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=3){ const y=getY(x)-bH/2; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    for(let x=W;x>=0;x-=3){ ctx.lineTo(x, getY(x)+bH/2); }
+    ctx.closePath();
+
+    const [r,g,bv]=b.rgb;
+    const grad=ctx.createLinearGradient(0,baseY-bH,0,baseY+bH);
+    grad.addColorStop(0,   `rgba(${r},${g},${bv},0)`);
+    grad.addColorStop(0.35,`rgba(${r},${g},${bv},${b.a})`);
+    grad.addColorStop(0.65,`rgba(${r},${g},${bv},${b.a})`);
+    grad.addColorStop(1,   `rgba(${r},${g},${bv},0)`);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawAurora);
+}
+drawAurora();
+
+/* ── Typewriter ────────────────────────────────────────── */
+const words = ['Backend Engineer','Distributed Systems','Performance Engineer','Platform Builder','IIT Roorkee Alumni'];
+let wi=0, ci=0, del=false;
+const tw = document.getElementById('tw');
+function type() {
+  const w = words[wi];
+  tw.textContent = del ? w.slice(0,--ci) : w.slice(0,++ci);
+  let d = del ? 45 : 75;
+  if (!del && ci===w.length) { d=2200; del=true; }
+  else if (del && ci===0) { del=false; wi=(wi+1)%words.length; d=360; }
+  setTimeout(type, d);
+}
+setTimeout(type, 1400);
+
+/* ── Counter animation ─────────────────────────────────── */
+function counter(el) {
+  const to = +el.dataset.to, dur = 1900, s = performance.now();
+  (function tick(now) {
+    const t = Math.min((now-s)/dur, 1);
+    const ease = 1-Math.pow(1-t,3);
+    el.textContent = Math.round(ease*to);
+    if(t<1) requestAnimationFrame(tick);
+  })(s);
+}
+
+/* ── Intersection Observer ─────────────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    if (el.classList.contains('cnt')) { counter(el); io.unobserve(el); }
+    if (el.classList.contains('tl-item')) { el.classList.add('vis'); }
+    if (el.classList.contains('sk-card')) { el.classList.add('vis'); }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.cnt, .tl-item, .sk-card').forEach(el => io.observe(el));
+
+/* ── Staggered skill cards ─────────────────────────────── */
+const skCards = document.querySelectorAll('.sk-card');
+const skIO = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('vis'), i * 90);
+      skIO.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+skCards.forEach(c => skIO.observe(c));
+
+/* ── Architecture modal ────────────────────────────────── */
+const archOverlay = document.getElementById('arch-overlay');
+const archBody = document.getElementById('arch-modal-body');
+const archTitle = document.getElementById('arch-modal-title');
+
+function openArch(templateId, title) {
+  const tpl = document.getElementById(templateId);
+  if (!tpl) return;
+  archBody.innerHTML = '';
+  archBody.appendChild(tpl.content.cloneNode(true));
+  archTitle.textContent = title;
+  archOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeArch() {
+  archOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('flip-trigger-pill').addEventListener('click', e => {
+  e.stopPropagation();
+  openArch('arch-diag-1', 'System Architecture · Stateless Microservice');
+});
+
+document.getElementById('flip-trigger-pill-2').addEventListener('click', e => {
+  e.stopPropagation();
+  openArch('arch-diag-2', 'Shadow Testing · Zero-Downtime Migration');
+});
+
+document.getElementById('flip-trigger-pill-3').addEventListener('click', e => {
+  e.stopPropagation();
+  openArch('arch-diag-3', 'Rewards Tracking · Activity Backend');
+});
+
+document.getElementById('flip-trigger-pill-4').addEventListener('click', e => {
+  e.stopPropagation();
+  openArch('arch-diag-4', 'Search API · OR-Filtering');
+});
+
+archOverlay.addEventListener('click', e => {
+  if (e.target === archOverlay) closeArch();
+});
+
+document.getElementById('arch-modal-close-btn').addEventListener('click', closeArch);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeArch();
+});
+</script>
+
+</body>
+</html>
